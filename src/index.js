@@ -11,15 +11,15 @@ root.render(
   </React.StrictMode>
 );
 
-var settings = {
-  "async": true,
-  "crossDomain": true,
-  "url": "https://us1.locationiq.com/v1/search?key=YOUR_ACCESS_TOKEN&q=SEARCH_STRING&format=json",
-  "method": "GET"
-}
+// var settings = {
+//   "async": true,
+//   "crossDomain": true,
+//   "url": "https://us1.locationiq.com/v1/search?key=YOUR_ACCESS_TOKEN&q=SEARCH_STRING&format=json",
+//   "method": "GET"
+// }
 
-$.ajax(settings).done(function (response) {
-  console.log(response);
-});
+// $.ajax(settings).done(function (response) {
+//   console.log(response);
+// });
 
 
