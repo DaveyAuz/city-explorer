@@ -1,6 +1,11 @@
 import React from 'react';
 import axios from 'axios';
 import Map from './Map';
+import SearchForm from './components/SearchForm';
+//import Container from 'react-bootstrap/Container';
+import Carousel from 'react-bootstrap/Carousel';
+import CityData from './components/CityData';
+import ErrorAlert from './components/ErrorAlert';
 
 class App extends React.Component {
   constructor(props) {
@@ -11,6 +16,7 @@ class App extends React.Component {
     longitude: '',
     latitude: '',
     weatherData: []
+  
     
         }
   }
@@ -75,64 +81,82 @@ class App extends React.Component {
     }
   }
 
-  // getMovieData = async (event) => {
-  //   event.preventDefault();
+  getPhotos = async () => {
 
-  //   // try {
-  //     // TODO: Use axios to get the data from LocationIQ - using city in state
-  //     const url = `https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_LOCATIONIQ_API_KEY}&q=${this.state.city}&format=json`
-  //       const API_KEY = 'your-api-key'; // Replace with your API key
-  //       // `${process.env.REACT_APP_SERVER}/weather?lat=${}&lon=${}&searchQuery=${this.state.city}}`;;
-  //     console.log(url)
-  //     let cityDataFromAxios = await axios.get(url);
-  //     console.log(cityDataFromAxios.data[0])
+    try {
+      let results = await axios.get(`${process.env.REACT_APP_SERVER}/photos?searchQuery=${this.state.city}`)
+      this.setState({
+        photoData: results.data,
+        showImages: true,
+        photoError: false,
+        photoErrorMessage: ''
+      })
+    } catch (error) {
+      this.setState({
+        photoError: true,
+        showImages: false,
+        photoErrorMessage: `A Photo Error Occurred: ${error.response.status}, ${error.response.data}`
 
-
-  //     // TODO: Set State with the data that comes back from axios & set error boolean to false
-  //     this.setState({
-  //       cityData: cityDataFromAxios.data[0],
-  //       error: false
-  //     });
-
-  //   // TODO: CALL WEATHER HANDLER
-  //   let lat = cityDataFromAxios.data[0].lat;
-
-  //   // MAP PORTION OF YOUR LAB IMG SRC POINTS TO THIS URL: 
-  //   // https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATIONIQ_API_KEY}&center=<CITY'S LAT>,<CITY'S LON>&zoom=13
-  // }
+      })
+    }
+  }
 
 
-render() {
+  render() {
     return (
       <>
-        <h1>MR PORTALS CITY EXPLORER!!</h1>
+        <Container>
+          <h1>API CALLS</h1>
+        </Container>
+          <SearchForm
+            getCityInfo={this.getCityData}
+            handleCityInput={this.handleCityInput}
+          /> ,
+        </>
+      ){
+            this.state.error
+              ? <ErrorAlert errorMessage={this.state.errorMessage} />
+              : Object.keys(this.state.cityData).length > 0 && <CityData
+              <>
+              <p>{this.state.location}</p>
+              <p>{this.state.latitude}</p>
+              <p>{this.state.longitude}</p>
+              </>
+          }
+        <Map img_url={`https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATIONIQ_API_KEY}&center=${this.state.latitude},${this.state.longitude}&size=${window.innerWidth}x300&format=jpg&zoom=15`}
+                    city={this.state.location}/>
+        </>
+              />{
+          }
+        </Container>
 
-        <form onSubmit={this.getCityData}>
-          <label > Enter in a City:
-            <input type="text" onChange={this.handleCityInput} />
-          </label>
-          <button type="submit">Explore!</button>
-        </form>
-
-        {/* TERNARY - WTF  */}
         {
-          this.state.error
-            ? <p>{this.state.errorMessage}</p>
-            : 
-            <>
-            <p>{this.state.location}</p>
-            <p>{this.state.latitude}</p>
-            <p>{this.state.longitude}</p>
-            </>
+          this.state.showImages &&
+          <>
+            <Container>
+              <Carousel>
+                {this.state.photoData.map((pic, idx) => (
+                  <Carousel.Item key={idx}>
+                    <img
+                      className="d-block w-100"
+                      src={pic.src}
+                      alt={pic.alt}
+                    />
+                    <Carousel.Caption>
+                      <h3 style={{ backgroundColor: 'teal', borderRadius: '5px', width: 'max-content', margin: 'auto', padding: '5px' }}>Photo by: {pic.username}</h3>
+                    </Carousel.Caption>
+                  </Carousel.Item>
+                ))}
+              </Carousel>
+            </Container>
+          </>
         }
-      <Map img_url={`https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATIONIQ_API_KEY}&center=${this.state.latitude},${this.state.longitude}&size=${window.innerWidth}x300&format=jpg&zoom=15`}
-                  city={this.state.location}/>
       </>
-    )
-  }
+}
 }
 
 export default App;
+
 
 
 
