@@ -53,7 +53,7 @@ class App extends React.Component {
       let lat = cityDataFromAxios.data[0].lat;
       let lon = cityDataFromAxios.data[0].lon;
       console.log(lat, lon);
-      //this.handleGetWeather(lat, lon);
+      this.handleGetWeather(lat, lon);
 
       // TODO: Set state with the error boolean and the error message
     } catch (error) {
@@ -64,16 +64,16 @@ class App extends React.Component {
     }
   }
 
-  handleGetWeather = async () => {
+  handleGetWeather = async (lat, lon) => {
     try {
+      console.log(`${process.env.REACT_APP_SERVER}/weather`)
       //TODO: Call my server and in the lat, long and city name. 
       //local host weather URL
-      const weatherDataFromAxios = await axios.get(`${process.env.REACT_APP_SERVER}/weather`, { params: { lat: this.state.latitude, lon: this.state.longitude } });
+      const weatherDataFromAxios = await axios.get(`${process.env.REACT_APP_SERVER}/weather`, { params: { lat: lat, lon: lon, searchQuery:this.state.city } });
       this.setState({
-        weatherData: weatherDataFromAxios.data
+        weatherData: weatherDataFromAxios.data.data
       })
-
-      console.log(weatherDataFromAxios.data[0])
+      console.log(weatherDataFromAxios.data.data)
     } catch (error) {
       this.setState({
         error: true,
