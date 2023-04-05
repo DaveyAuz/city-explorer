@@ -1,18 +1,22 @@
 import React from 'react';
 import Movie from './Movie';
 
-class Movie extends React.Component {
+import React, { Component } from 'react'
+import Movies from './Movies';
+
+export default class Movie extends Component {
     render() {
+        console.log(this.props);
         return (
-            <>
-            <p>this.props.movie.title</p>
-            <p>this.props.movie.overview</p>
-            </>
-            
-            
-            <div className="movie">
-                <img src={this.props.image} alt={this.props.title} />
-                <h3>{this.props.title}</h3>
+            <div>
+                <h3>Movies</h3>
+                <ul>
+                    {this.props.movieData.map(movies => <Movies movies={movies} />)}
+                    {/* <li key={movie}> */}
+
+                    {/* </li> */}
+                </ul>
             </div>
-        );
+        )
     }
+}
