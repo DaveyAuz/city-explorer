@@ -2,8 +2,8 @@ import React from 'react';
 import axios from 'axios';
 import Map from './Map';
 //import SearchForm from './components/SearchForm';
-import Container from 'react-bootstrap/Container';
-import Carousel from 'react-bootstrap/Carousel';
+//import Container from 'react-bootstrap/Container';
+//import Carousel from 'react-bootstrap/Carousel';
 //import CityData from './components/CityData';
 //import ErrorAlert from './components/ErrorAlert';
 
