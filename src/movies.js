@@ -9,11 +9,9 @@ export default class Movie extends Component {
         return (
             <div>
                 <h3>Movies</h3>
-                <ul>
                     {this.props.movieData.map(movies => <Movies movies={movies} />)}
-                    {/* <li key={movie}> */}
-                    {/* </li> */}
-                </ul>
+                
+            
             </div>
         )
     }
