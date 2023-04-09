@@ -1,11 +1,12 @@
-import React from 'react';
-import axios from 'axios';
-import Map from './Map';
-//import SearchForm from './components/SearchForm';
+import React from "react";
+import axios from "axios";
+//import Button from 'react-bootstrap/Button';
+import Image from 'react-bootstrap/Image';
+import Weather from './Weather'
+import Movie from './Movie'
 import Container from 'react-bootstrap/Container';
-import Carousel from 'react-bootstrap/Carousel';
-//import CityData from './components/CityData';
-//import ErrorAlert from './components/ErrorAlert';
+import './App.css';
+import Form from 'react-bootstrap/Form';
 
 class App extends React.Component {
   constructor(props) {
@@ -21,7 +22,7 @@ class App extends React.Component {
     }
   }
   handleCityInput = (event) => {
-    console.log(event)
+    console.log(event.target.value)
     this.setState({
       city: event.target.value
     })
@@ -66,14 +67,28 @@ class App extends React.Component {
 
   handleGetWeather = async (lat, lon) => {
     try {
-      console.log(`${process.env.REACT_APP_SERVER}/weather`)
+      console.log(`${process.env.REACT_APP_SERVER}/weather?lat=${lat}&lon=${lon}`)
       //TODO: Call my server and in the lat, long and city name. 
       //local host weather URL
-      const weatherDataFromAxios = await axios.get(`${process.env.REACT_APP_SERVER}/weather`, { params: { lat: lat, lon: lon, searchQuery:this.state.city } });
+      const weatherDataFromAxios = await axios.get(`${process.env.REACT_APP_SERVER}/weather?lat=${lat}&lon=${lon}`);
+      console.log(weatherDataFromAxios);
       this.setState({
-        weatherData: weatherDataFromAxios.data.data
+        weatherData: weatherDataFromAxios.data
       })
       console.log(weatherDataFromAxios.data.data)
+      let movieResultsfromAxios = await axios.get(`${process.env.REACT_APP_SERVER}/movies?title=${this.state.city}`);
+      console.log(movieResultsfromAxios);
+      // Todo: Set state with the data that comes back from axios
+      this.setState({
+        // cityData: cityDatafromAxios.data[0],
+        //weatherData: weatherDatafromAxios.data,
+        error: false,
+        showMap: true,
+        movieData: movieResultsfromAxios.data,
+
+      });
+
+
     } catch (error) {
       this.setState({
         error: true,
@@ -104,31 +119,34 @@ class App extends React.Component {
 
 
   render() {
+    console.log(this.state);
     return (
-      <>
-        <h1>MR PORTALS CITY EXPLORER!!</h1>
+      <Container>
+
+        <h1>City Explorer</h1>
 
         <form onSubmit={this.getCityData}>
-          <label > Enter in a City:
-            <input type="text" onChange={this.handleCityInput} />
+          <label> Enter in a City:
+            <input placeholder='Enter City Name' type="text" onChange={this.handleCityInput} value={this.state.city}/>
           </label>
-          <button type="submit">Explore!</button>
+          <button type="submit" variant="primary">Explore!</button>
         </form>
+        {/*TERNARY - WTF */}
+        {this.state.error ? <p>{this.state.errorMessage}</p>
+          : <p>{this.state.city}</p>}
+        {this.state.showMap && <Image class="img-fluid" src={`https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATIONIQ_API_KEY}&center=${this.state.latitude},${this.state.longitude}&zoom=13`} alt='City map for location selected' />}
+        <p>{this.state.longitude}</p>
+        <p>{this.state.latitude}</p>
 
-        {/* TERNARY - WTF  */}
-        {
-          this.state.error
-            ? <p>{this.state.errorMessage}</p>
-            : 
-            <>
-            <p>{this.state.location}</p>
-            <p>{this.state.latitude}</p>
-            <p>{this.state.longitude}</p>
-            </>
-        }
-      <Map img_url={`https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATIONIQ_API_KEY}&center=${this.state.latitude},${this.state.longitude}&size=${window.innerWidth}x300&format=jpg&zoom=14`}
-                  city={this.state.location}/>
-      </>
+        {this.state.weatherData && (
+          this.state.weatherData.map(weather => (<Weather weatherData={weather} />)
+        ))};
+
+        {this.state.movieData && (
+        this.state.movieData.map(movieData => (<Movie movieData={this.state.movieData} />)
+        ))};
+
+      </Container>
     )
   }
 }
