@@ -1,9 +1,8 @@
 import React from "react";
 import axios from "axios";
-//import Button from 'react-bootstrap/Button';
 import Image from 'react-bootstrap/Image';
 import Weather from './Weather'
-import Movie from './Movie'
+import Movie from './Movie.js'
 import Container from 'react-bootstrap/Container';
 import './App.css';
 import Form from 'react-bootstrap/Form';
@@ -22,7 +21,7 @@ class App extends React.Component {
     }
   }
   handleCityInput = (event) => {
-    console.log(event.target.value)
+    //console.log(event.target.value)
     this.setState({
       city: event.target.value
     })
@@ -35,11 +34,11 @@ class App extends React.Component {
     event.preventDefault();
 
     const url = `https://us1.locationiq.com/v1/search?key=${process.env.REACT_APP_LOCATIONIQ_API_KEY}&q=${this.state.city}&format=json`;
-    console.log(url)
+    //console.log(url)
     try {
       // TODO: Use axios to get the data from LocationIQ - using city in state
       let cityDataFromAxios = await axios.get(url);
-      console.log(cityDataFromAxios.data[0])
+      //console.log(cityDataFromAxios.data[0])
 
       // TODO: Set State with the data that comes back from axios & set error boolean to false
       this.setState({
@@ -48,12 +47,12 @@ class App extends React.Component {
         latitude: cityDataFromAxios.data[0].lat,
         error: false
       });
-      console.log(this.state.location);
+      //console.log(this.state.location);
 
       // TODO: CALL WEATHER HANDLER
       let lat = cityDataFromAxios.data[0].lat;
       let lon = cityDataFromAxios.data[0].lon;
-      console.log(lat, lon);
+      //console.log(lat, lon);
       this.handleGetWeather(lat, lon);
 
       // TODO: Set state with the error boolean and the error message
@@ -67,17 +66,17 @@ class App extends React.Component {
 
   handleGetWeather = async (lat, lon) => {
     try {
-      console.log(`${process.env.REACT_APP_SERVER}/weather?lat=${lat}&lon=${lon}`)
+      //console.log(`${process.env.REACT_APP_SERVER}/weather?lat=${lat}&lon=${lon}`)
       //TODO: Call my server and in the lat, long and city name. 
       //local host weather URL
       const weatherDataFromAxios = await axios.get(`${process.env.REACT_APP_SERVER}/weather?lat=${lat}&lon=${lon}`);
-      console.log(weatherDataFromAxios);
+      //console.log(weatherDataFromAxios);
       this.setState({
         weatherData: weatherDataFromAxios.data
       })
-      console.log(weatherDataFromAxios.data.data)
+      //console.log(weatherDataFromAxios.data.data)
       let movieResultsfromAxios = await axios.get(`${process.env.REACT_APP_SERVER}/movies?title=${this.state.city}`);
-      console.log(movieResultsfromAxios);
+      //console.log(movieResultsfromAxios);
       // Todo: Set state with the data that comes back from axios
       this.setState({
         // cityData: cityDatafromAxios.data[0],
@@ -119,7 +118,7 @@ class App extends React.Component {
 
 
   render() {
-    console.log(this.state);
+    //console.log(this.state);
     return (
       <Container>
 
