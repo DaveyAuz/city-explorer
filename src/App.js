@@ -76,7 +76,7 @@ class App extends React.Component {
       })
       //console.log(weatherDataFromAxios.data.data)
       let movieResultsfromAxios = await axios.get(`${process.env.REACT_APP_SERVER}/movies?title=${this.state.city}`);
-      //console.log(movieResultsfromAxios);
+      console.log(movieResultsfromAxios);
       // Todo: Set state with the data that comes back from axios
       this.setState({
         // cityData: cityDatafromAxios.data[0],
@@ -142,9 +142,8 @@ class App extends React.Component {
         ))};
 
         {this.state.movieData && (
-        this.state.movieData.map(movieData => (<Movie movieData={this.state.movieData} />)
+        this.state.movieData.map(movieData => (<Movie movieData={movieData} />)
         ))};
-
       </Container>
     )
   }
